@@ -66,11 +66,11 @@ export default function CartPage() {
                                                     <span className="text-lg font-semibold text-gray-900">
                                                         ₹{item.price.toLocaleString()}
                                                     </span>
-                                                    {('originalPrice' in item) && item.originalPrice && (
+                                                    {('originalPrice' in (item as any) && (item as any).originalPrice) ? (
                                                         <span className="text-sm text-gray-500 line-through">
                                                             ₹{(item as any).originalPrice.toLocaleString()}
                                                         </span>
-                                                    )}
+                                                    ) : null}
                                                 </div>
 
                                                 {/* Delivery Info */}

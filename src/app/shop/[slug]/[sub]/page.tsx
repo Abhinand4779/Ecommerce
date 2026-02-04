@@ -5,8 +5,8 @@ import { ChevronRight } from 'lucide-react';
 
 import { products as allProducts } from '@/data/products';
 
-export default function SubcategoryPage({ params }: { params: { category: string; sub: string } }) {
-    const { category, sub } = params;
+export default function SubcategoryPage({ params }: { params: { slug: string; sub: string } }) {
+    const { slug: category, sub } = params;
     const title = `${sub.charAt(0).toUpperCase() + sub.slice(1)} ${category.charAt(0).toUpperCase() + category.slice(1)}`;
     const products = allProducts.filter(p => p.category === category && p.sub === sub);
 
@@ -25,7 +25,17 @@ export default function SubcategoryPage({ params }: { params: { category: string
                 </div>
             </div>
 
-                    <SubcategoryGrid category={category} sub={sub} />
+            <div className="container mx-auto px-4 sm:px-6 py-8">
+                <h1 className="text-2xl font-bold mb-4">{title}</h1>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {products.length > 0 ? products.map(p => (
+                        <ProductCardFlipkart key={p.id} product={p} />
+                    )) : (
+                        <div className="col-span-full bg-white p-6 rounded border border-gray-200 text-center">No products found for this category yet.</div>
+                    )}
+                </div>
+            </div>
 
             <Footer />
         </main>

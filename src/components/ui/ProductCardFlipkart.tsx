@@ -26,7 +26,8 @@ const ProductCardFlipkart = ({ product }: { product: ProductCardFlipkartProps })
             <Link href={`/shop/${product.id}`} className="block">
                 <div className="aspect-square bg-gray-50 overflow-hidden relative">
                     <img
-                        src={product.images?.[0] ?? product.image}
+                        src={product.images?.[0] ?? product.image ?? ''}
+                        alt={product.name}
                     />
                     {product.discount && (
                         <div className="absolute top-2 left-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-sm">
@@ -82,7 +83,7 @@ const ProductCardFlipkart = ({ product }: { product: ProductCardFlipkartProps })
                 onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    if (addToCart) addToCart({ id: product.id, name: product.name, price: product.price, image: product.images?.[0] ?? product.image });
+                    if (addToCart) addToCart({ id: product.id, name: product.name, price: product.price, image: product.images?.[0] ?? product.image ?? '' });
                 }}
                 className="absolute bottom-3 right-3 bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 text-xs rounded-sm shadow-md"
             >

@@ -40,7 +40,7 @@ const ProductCarousel = ({ title, products }: ProductCarouselProps) => {
             onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                addToCart({ id: product.id, name: product.name, price: product.price, image: product.images?.[0] ?? product.image });
+                addToCart({ id: product.id, name: product.name, price: product.price, image: product.images?.[0] ?? product.image ?? '' });
             }}
             className="absolute bottom-3 right-3 bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 text-xs rounded-sm shadow-md"
         >
@@ -82,7 +82,7 @@ const ProductCarousel = ({ title, products }: ProductCarouselProps) => {
 
                                     <div className="aspect-square bg-gray-50 overflow-hidden relative">
                                         <img
-                                            src={product.images?.[0] ?? product.image}
+                                            src={product.images?.[0] ?? product.image ?? ''}
                                             alt={product.name}
                                             className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
                                         />
