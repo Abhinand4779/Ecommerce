@@ -1,10 +1,7 @@
-"use client";
-
 import React from 'react';
 import Footer from "@/components/layout/Footer";
 import { Minus, Plus, Trash2, Tag } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 
@@ -16,16 +13,16 @@ export default function CartPage() {
     const deliveryCharges = subtotal > 50000 ? 0 : (subtotal > 0 ? 500 : 0);
     const total = subtotal + deliveryCharges;
 
-    const router = useRouter();
+    const navigate = useNavigate();
     const { user } = useAuth();
 
     const handlePlaceOrder = () => {
         if (!user) {
             // redirect to profile so user can sign in or register
-            router.push('/profile');
+            navigate('/profile');
             return;
         }
-        router.push('/checkout');
+        navigate('/checkout');
     };
 
     return (
@@ -45,7 +42,7 @@ export default function CartPage() {
                                     <div key={item.id} className="p-4 border-b border-gray-200 last:border-0">
                                         <div className="flex gap-4">
                                             {/* Image */}
-                                            <Link href={`/shop/${item.id}`} className="flex-shrink-0">
+                                            <Link to={`/shop/${item.id}`} className="flex-shrink-0">
                                                 <img
                                                     src={item.image}
                                                     alt={item.name}
@@ -55,7 +52,7 @@ export default function CartPage() {
 
                                             {/* Details */}
                                             <div className="flex-1 min-w-0">
-                                                <Link href={`/shop/${item.id}`} className="hover:text-blue-600">
+                                                <Link to={`/shop/${item.id}`} className="hover:text-blue-600">
                                                     <h3 className="font-medium text-sm sm:text-base text-gray-800 mb-2 line-clamp-2">
                                                         {item.name}
                                                     </h3>
@@ -190,7 +187,7 @@ export default function CartPage() {
                         <h2 className="text-xl font-semibold text-gray-800 mb-4">Your cart is empty!</h2>
                         <p className="text-gray-600 mb-6">Add items to it now.</p>
                         <Link
-                            href="/shop"
+                            to="/shop"
                             className="inline-block bg-blue-600 text-white px-8 py-3 rounded-sm font-semibold hover:bg-blue-700 transition-colors"
                         >
                             Shop Now

@@ -1,8 +1,5 @@
-"use client";
-
 import React from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import {
     LayoutDashboard,
@@ -15,9 +12,10 @@ import {
 } from 'lucide-react';
 
 const AdminSidebar = () => {
-    const pathname = usePathname();
-    const router = useRouter();
+    const location = useLocation();
+    const navigate = useNavigate();
     const { signOut } = useAuth();
+    const pathname = location.pathname;
 
     const menuItems = [
         { name: 'Dashboard', icon: <LayoutDashboard size={20} />, href: '/admin' },
@@ -31,7 +29,7 @@ const AdminSidebar = () => {
     return (
         <aside className="fixed left-0 top-0 h-screen w-64 bg-[#141414] border-r border-white/5 flex flex-col z-50">
             <div className="p-8">
-                <Link href="/" className="text-xl font-bold tracking-widest text-[#D4AF37]">
+                <Link to="/" className="text-xl font-bold tracking-widest text-[#D4AF37]">
                     AURELIA <span className="text-white text-xs block font-light">ADMIN PANEL</span>
                 </Link>
             </div>
@@ -41,7 +39,7 @@ const AdminSidebar = () => {
                     {menuItems.map((item) => (
                         <li key={item.name}>
                             <Link
-                                href={item.href}
+                                to={item.href}
                                 className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all ${pathname === item.href
                                     ? 'bg-[#D4AF37] text-black font-semibold'
                                     : 'text-gray-400 hover:bg-white/5 hover:text-white'
@@ -60,7 +58,7 @@ const AdminSidebar = () => {
                     onClick={() => {
                         if (typeof window !== 'undefined') localStorage.removeItem('isAdmin');
                         try { signOut(); } catch (e) { /* ignore */ }
-                        router.push('/admin');
+                        navigate('/admin');
                     }}
                     className="flex items-center gap-4 text-gray-400 hover:text-red-400 transition-colors w-full px-4 py-3"
                 >

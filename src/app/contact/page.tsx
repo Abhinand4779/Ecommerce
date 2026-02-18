@@ -1,4 +1,4 @@
-"use client";
+
 
 import React, { useState } from "react";
 import Footer from "@/components/layout/Footer";
@@ -6,7 +6,7 @@ import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 export default function ContactPage() {
     const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
-    const [status, setStatus] = useState<'idle'|'sending'|'sent'|'error'>('idle');
+    const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target as HTMLInputElement | HTMLTextAreaElement;

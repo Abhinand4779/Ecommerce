@@ -216,6 +216,18 @@ button {
   animation: scaleIn 0.3s ease-out;
 }
 
+.animate-fade-in-delay {
+  animation: fadeIn 0.6s ease-out 0.2s both;
+}
+
+.animate-fade-in-delay-2 {
+  animation: fadeIn 0.6s ease-out 0.4s both;
+}
+
+.animate-slide-in-delayed {
+  animation: slideIn 0.8s ease-out 0.3s both;
+}
+
 /* Hover Effects */
 .hover-lift {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -273,8 +285,9 @@ button {
   border-color: #1f2937 !important;
 }
 
-.dark input, .dark textarea {
+.dark input,
+.dark textarea {
   background-color: #0b1220 !important;
   color: #e6eef8 !important;
   border-color: #1f2937 !important;
-} 
+}

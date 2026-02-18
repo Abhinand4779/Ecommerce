@@ -1,15 +1,18 @@
-"use client";
-
-import React from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
 export default function ProfilePage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { user, signOut } = useAuth();
 
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
   if (!user) {
-    if (typeof window !== "undefined") router.push("/login");
     return null;
   }
 
@@ -28,7 +31,7 @@ export default function ProfilePage() {
           <div className="flex gap-3">
             <button
               className="btn-primary"
-              onClick={() => router.push("/")}
+              onClick={() => navigate("/")}
             >
               Continue Shopping
             </button>
@@ -37,7 +40,7 @@ export default function ProfilePage() {
               className="btn-secondary"
               onClick={() => {
                 signOut();
-                router.push("/");
+                navigate("/");
               }}
             >
               Sign Out

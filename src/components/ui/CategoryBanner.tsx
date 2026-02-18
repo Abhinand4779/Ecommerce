@@ -1,7 +1,5 @@
-"use client";
-
 import React, { useRef } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const categories = [
@@ -31,7 +29,7 @@ const CategoryBanner = () => {
             <div className="container mx-auto px-4 sm:px-6 relative">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-lg sm:text-xl font-bold text-gray-800">Shop by Category</h2>
-                    <Link href="/shop" className="text-blue-600 text-sm font-medium hover:underline">
+                    <Link to="/shop" className="text-blue-600 text-sm font-medium hover:underline">
                         View All
                     </Link>
                 </div>
@@ -54,7 +52,7 @@ const CategoryBanner = () => {
                         {categories.map((cat) => (
                             <Link
                                 key={cat.name}
-                                href={cat.href}
+                                to={cat.href}
                                 className="flex-shrink-0 w-32 sm:w-40 group/item"
                             >
                                 <div className="bg-gray-50 rounded-lg overflow-hidden mb-2 aspect-square">

@@ -1,14 +1,11 @@
-"use client";
-
 import React, { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate, Link } from 'react-router-dom';
 import Footer from '@/components/layout/Footer';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
-import Link from 'next/link';
 
 export default function CheckoutPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { items, clearCart } = useCart();
   const { user } = useAuth();
 
@@ -22,7 +19,7 @@ export default function CheckoutPage() {
   const handlePlaceOrder = async () => {
     if (!user) {
       // redirect to profile/sign-in first
-      router.push('/profile');
+      navigate('/profile');
       return;
     }
 
@@ -41,7 +38,7 @@ export default function CheckoutPage() {
     clearCart();
 
     setTimeout(() => {
-      router.push(`/checkout/success?orderId=${orderId}`);
+      navigate(`/checkout/success?orderId=${orderId}`);
     }, 600);
   };
 
@@ -57,7 +54,7 @@ export default function CheckoutPage() {
               {items.length === 0 ? (
                 <div className="py-20 text-center">
                   <p className="text-gray-600 mb-4">Your cart is empty.</p>
-                  <Link href="/shop" className="inline-block px-5 py-3 bg-blue-600 text-white rounded-sm">Start Shopping</Link>
+                  <Link to="/shop" className="inline-block px-5 py-3 bg-blue-600 text-white rounded-sm">Start Shopping</Link>
                 </div>
               ) : (
                 <div className="space-y-4">

@@ -1,9 +1,10 @@
+import React from 'react';
 import HeroBanner from "@/components/ui/HeroBanner";
 import CategoryBanner from "@/components/ui/CategoryBanner";
 import DealsSection from "@/components/ui/DealsSection";
 import ProductCarousel from "@/components/ui/ProductCarousel";
 import Footer from "@/components/layout/Footer";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { TruckIcon, ShieldCheck, RotateCcw, Headphones } from "lucide-react";
 
 const trendingProducts = [
@@ -51,7 +52,7 @@ export default function Home() {
                 Get up to 50% OFF on bridal jewellery collections
               </p>
               <Link
-                href="/shop?category=wedding"
+                to="/shop?category=wedding"
                 className="inline-block bg-white text-purple-600 px-6 py-3 rounded-sm font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
               >
                 Explore Collection
@@ -81,7 +82,7 @@ export default function Home() {
             Exclusive designs with hallmark certification
           </p>
           <Link
-            href="/shop?category=gold"
+            to="/shop?category=gold"
             className="inline-block bg-gray-900 text-white px-6 sm:px-8 py-3 rounded-sm font-semibold hover:bg-gray-800 transition-colors text-sm sm:text-base"
           >
             Shop Gold Collection
@@ -128,7 +129,7 @@ export default function Home() {
             ].map((occasion) => (
               <Link
                 key={occasion.name}
-                href={`/shop?occasion=${occasion.name.toLowerCase()}`}
+                to={`/shop?occasion=${occasion.name.toLowerCase()}`}
                 className="group"
               >
                 <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-2">

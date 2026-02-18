@@ -1,17 +1,15 @@
-"use client";
-
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminLogin() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const adminUser = process.env.NEXT_PUBLIC_ADMIN_USERNAME ?? 'admin';
-  const adminPass = process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? 'password';
+  const adminUser = import.meta.env.VITE_ADMIN_USERNAME ?? 'admin';
+  const adminPass = import.meta.env.VITE_ADMIN_PASSWORD ?? 'password';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +24,7 @@ export default function AdminLogin() {
       if (typeof window !== 'undefined') {
         localStorage.setItem('isAdmin', 'true');
       }
-      router.push('/admin');
+      navigate('/admin');
     } else {
       setError('Invalid username or password');
     }

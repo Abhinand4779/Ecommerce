@@ -1,7 +1,5 @@
-"use client";
-
 import React from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 
 const deals = [
     {
@@ -36,7 +34,7 @@ const DealsSection = () => {
             <div className="container mx-auto px-4 sm:px-6">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-lg sm:text-xl font-bold text-gray-800">Best Deals on Jewellery</h2>
-                    <Link href="/shop" className="text-blue-600 text-sm font-medium hover:underline">
+                    <Link to="/shop" className="text-blue-600 text-sm font-medium hover:underline">
                         See All
                     </Link>
                 </div>
@@ -45,7 +43,7 @@ const DealsSection = () => {
                     {deals.map((deal, index) => (
                         <Link
                             key={index}
-                            href={deal.href}
+                            to={deal.href}
                             className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow group"
                         >
                             <div className="aspect-square bg-gray-50 overflow-hidden">

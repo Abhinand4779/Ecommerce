@@ -1,16 +1,9 @@
-"use client";
-
 import React, { useEffect, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import AdminSidebar from "@/components/admin/AdminSidebar";
-import dynamic from 'next/dynamic';
+import AdminLogin from '@/components/admin/AdminLogin';
 
-const AdminLogin = dynamic(() => import('@/components/admin/AdminLogin'), { ssr: false });
-
-export default function AdminLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export default function AdminLayout() {
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
     useEffect(() => {
@@ -46,7 +39,9 @@ export default function AdminLayout({
                     </div>
                 </header>
                 <div className="p-10">
-                    {children}
+                    <div className="p-10">
+                        <Outlet />
+                    </div>
                 </div>
             </main>
         </div>

@@ -1,7 +1,5 @@
-"use client";
-
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const banners = [
@@ -66,7 +64,7 @@ const HeroBanner = () => {
                                 <p className="text-lg sm:text-xl md:text-2xl mb-6 animate-fade-in-delay">
                                     {banner.subtitle}
                                 </p>
-                                <Link href="/shop" className="bg-white text-gray-900 px-6 sm:px-8 py-3 rounded-sm font-semibold hover:bg-gray-100 transition-colors animate-fade-in-delay-2 inline-block">
+                                <Link to="/shop" className="bg-white text-gray-900 px-6 sm:px-8 py-3 rounded-sm font-semibold hover:bg-gray-100 transition-colors animate-fade-in-delay-2 inline-block">
                                     Shop Now
                                 </Link>
                             </div>
@@ -74,7 +72,7 @@ const HeroBanner = () => {
                                 <img
                                     src={banner.image}
                                     alt={banner.title}
-                                    className="w-full h-64 object-cover rounded-lg shadow-2xl animate-slide-in"
+                                    className="w-full h-64 object-cover rounded-lg shadow-2xl animate-slide-in-delayed"
                                 />
                             </div>
                         </div>
@@ -107,29 +105,6 @@ const HeroBanner = () => {
                     />
                 ))}
             </div>
-
-            <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideIn {
-          from { opacity: 0; transform: translateX(50px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.6s ease-out;
-        }
-        .animate-fade-in-delay {
-          animation: fadeIn 0.6s ease-out 0.2s both;
-        }
-        .animate-fade-in-delay-2 {
-          animation: fadeIn 0.6s ease-out 0.4s both;
-        }
-        .animate-slide-in {
-          animation: slideIn 0.8s ease-out 0.3s both;
-        }
-      `}</style>
         </div>
     );
 };

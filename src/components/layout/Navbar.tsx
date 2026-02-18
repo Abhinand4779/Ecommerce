@@ -1,8 +1,5 @@
-"use client";
-
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { Search, ShoppingCart, User, Menu, X, Heart, ChevronDown, ChevronUp, Moon, Sun } from 'lucide-react';
@@ -11,13 +8,15 @@ const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [mobileOpen, setMobileOpen] = useState<Record<string, boolean>>({});
 
-    const pathname = usePathname();
-    // Hide global Navbar on admin routes
-    if (pathname && pathname.startsWith('/admin')) return null;
+    const location = useLocation();
+    const pathname = location.pathname;
 
     // Desktop dropdown open state and close timer
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
     const closeTimerRef = React.useRef<number | null>(null);
+
+    // Hide global Navbar on admin routes
+    if (pathname && pathname.startsWith('/admin')) return null;
 
     const openDropdownNow = (name: string) => {
         if (closeTimerRef.current) {
@@ -36,7 +35,6 @@ const Navbar = () => {
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
     useEffect(() => {
-        if (typeof window === 'undefined') return;
         const stored = localStorage.getItem('theme');
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (stored === 'dark' || (!stored && prefersDark)) {
@@ -61,7 +59,7 @@ const Navbar = () => {
     };
 
     // Auth and navigation
-    const router = useRouter();
+    const navigate = useNavigate();
     const { user, signInGuest } = useAuth();
 
     // Cart and favorites counts
@@ -70,56 +68,56 @@ const Navbar = () => {
 
 
     const onProfileClick = () => {
-        if (!user) router.push('/login');
-        else router.push('/profile');
+        if (!user) navigate('/login');
+        else navigate('/profile');
     };
 
     const onGuestSignIn = async () => {
         await signInGuest();
-        router.push('/profile');
-    }; 
+        navigate('/profile');
+    };
 
     const categories = [
         { name: 'Home', href: '/' },
         {
             name: 'Ring',
-            href: '/shop/rings',
+            href: '/shop?category=rings',
             subcategories: [
-                { name: 'Solitaire', href: '/shop/rings/solitaire' },
-                { name: 'Halo', href: '/shop/rings/halo' },
-                { name: 'Stackable', href: '/shop/rings/stackable' },
+                { name: 'Solitaire', href: '/shop?category=rings&type=solitaire' },
+                { name: 'Halo', href: '/shop?category=rings&type=halo' },
+                { name: 'Stackable', href: '/shop?category=rings&type=stackable' },
             ],
         },
         {
             name: 'Necklace',
-            href: '/shop/necklaces',
+            href: '/shop?category=necklaces',
             subcategories: [
-                { name: 'Pendant', href: '/shop/necklaces/pendant' },
-                { name: 'Choker', href: '/shop/necklaces/choker' },
+                { name: 'Pendant', href: '/shop?category=necklaces&type=pendant' },
+                { name: 'Choker', href: '/shop?category=necklaces&type=choker' },
             ],
         },
         {
             name: 'Anklets',
-            href: '/shop/anklets',
+            href: '/shop?category=anklets',
             subcategories: [
-                { name: 'Gold Anklets', href: '/shop/anklets/gold' },
-                { name: 'Silver Anklets', href: '/shop/anklets/silver' },
+                { name: 'Gold Anklets', href: '/shop?category=anklets&type=gold' },
+                { name: 'Silver Anklets', href: '/shop?category=anklets&type=silver' },
             ],
         },
         {
             name: 'Bangles',
-            href: '/shop/bangles',
+            href: '/shop?category=bangles',
             subcategories: [
-                { name: 'Kada', href: '/shop/bangles/kada' },
-                { name: 'Slim Bangles', href: '/shop/bangles/slim' },
+                { name: 'Kada', href: '/shop?category=bangles&type=kada' },
+                { name: 'Slim Bangles', href: '/shop?category=bangles&type=slim' },
             ],
         },
         {
             name: 'Earrings',
-            href: '/shop/earrings',
+            href: '/shop?category=earrings',
             subcategories: [
-                { name: 'Studs', href: '/shop/earrings/studs' },
-                { name: 'Drops', href: '/shop/earrings/drops' },
+                { name: 'Studs', href: '/shop?category=earrings&type=studs' },
+                { name: 'Drops', href: '/shop?category=earrings&type=drops' },
             ],
         },
         { name: 'About', href: '/about' },
@@ -140,7 +138,7 @@ const Navbar = () => {
                     </button>
 
                     {/* Logo (Centered on mobile, Left on desktop) */}
-                    <Link href="/" className="flex flex-col items-center md:items-start group transition-transform duration-300 hover:scale-105">
+                    <Link to="/" className="flex flex-col items-center md:items-start group transition-transform duration-300 hover:scale-105">
                         <span className="text-2xl sm:text-3xl font-serif font-bold tracking-widest text-gray-900 group-hover:text-amber-600">
                             AURELIA
                         </span>
@@ -195,7 +193,7 @@ const Navbar = () => {
                             )}
                         </button>
 
-                        <Link href="/cart" className="p-2 text-gray-600 hover:text-amber-600 transition-colors relative">
+                        <Link to="/cart" className="p-2 text-gray-600 hover:text-amber-600 transition-colors relative">
                             <ShoppingCart size={22} />
                             {cartCount > 0 && (
                                 <span className="absolute top-1 right-1 bg-amber-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">{cartCount}</span>
@@ -219,7 +217,7 @@ const Navbar = () => {
                                 onBlur={closeDropdownDelayed}
                             >
                                 <Link
-                                    href={cat.href}
+                                    to={cat.href}
                                     className="text-sm font-medium text-gray-600 hover:text-amber-600 uppercase tracking-widest transition-colors flex items-center gap-2"
                                     aria-haspopup={cat.subcategories ? 'menu' : undefined}
                                 >
@@ -238,7 +236,7 @@ const Navbar = () => {
                                         {cat.subcategories.map((sub) => (
                                             <Link
                                                 key={sub.name}
-                                                href={sub.href}
+                                                to={sub.href}
                                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                                             >
                                                 {sub.name}
@@ -249,7 +247,7 @@ const Navbar = () => {
                             </li>
                         ))}
                     </ul>
-                </div> 
+                </div>
             </nav>
 
             {/* Mobile Navigation Drawer */}
@@ -260,7 +258,7 @@ const Navbar = () => {
                             <li key={cat.name} className="w-full text-left">
                                 <div className="flex items-center justify-between w-full border-b border-gray-100 py-3">
                                     <Link
-                                        href={cat.href}
+                                        to={cat.href}
                                         className="text-xl font-medium text-gray-800 hover:text-amber-600 block"
                                         onClick={() => setIsMenuOpen(false)}
                                     >
@@ -283,7 +281,7 @@ const Navbar = () => {
                                         {cat.subcategories.map((sub) => (
                                             <li key={sub.name} className="py-2">
                                                 <Link
-                                                    href={sub.href}
+                                                    to={sub.href}
                                                     className="text-gray-700 block"
                                                     onClick={() => setIsMenuOpen(false)}
                                                 >
@@ -331,4 +329,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

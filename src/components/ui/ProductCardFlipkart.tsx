@@ -1,7 +1,5 @@
-"use client";
-
 import React from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
@@ -23,7 +21,7 @@ const ProductCardFlipkart = ({ product }: { product: ProductCardFlipkartProps })
 
     return (
         <div className="bg-white border border-gray-200 rounded-sm overflow-hidden hover:shadow-lg transition-shadow group block relative">
-            <Link href={`/shop/${product.id}`} className="block">
+            <Link to={`/shop/${product.id}`} className="block">
                 <div className="aspect-square bg-gray-50 overflow-hidden relative">
                     <img
                         src={product.images?.[0] ?? product.image ?? ''}

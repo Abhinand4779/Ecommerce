@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from 'react';
 import Footer from "@/components/layout/Footer";
 import ProductCardFlipkart from "@/components/ui/ProductCardFlipkart";

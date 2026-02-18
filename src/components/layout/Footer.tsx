@@ -1,6 +1,6 @@
 import React from 'react';
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
@@ -10,16 +10,16 @@ const Footer = () => {
 
                     {/* Brand */}
                     <div className="flex flex-col gap-6">
-                        <Link href="/" className="text-3xl font-bold tracking-widest text-white">
+                        <Link to="/" className="text-3xl font-bold tracking-widest text-white">
                             <span className="gold-gradient">AURELIA</span>
                         </Link>
                         <p className="text-gray-400 max-w-xs">
                             Defining luxury since 1995. Our commitment to quality and craftsmanship makes us the premier choice for fine jewellery.
                         </p>
                         <div className="flex gap-4">
-                            <Link href="#" className="hover:text-[#D4AF37] transition-colors"><Facebook size={20} /></Link>
-                            <Link href="#" className="hover:text-[#D4AF37] transition-colors"><Instagram size={20} /></Link>
-                            <Link href="#" className="hover:text-[#D4AF37] transition-colors"><Twitter size={20} /></Link>
+                            <Link to="#" className="hover:text-[#D4AF37] transition-colors"><Facebook size={20} /></Link>
+                            <Link to="#" className="hover:text-[#D4AF37] transition-colors"><Instagram size={20} /></Link>
+                            <Link to="#" className="hover:text-[#D4AF37] transition-colors"><Twitter size={20} /></Link>
                         </div>
                     </div>
 
@@ -27,11 +27,11 @@ const Footer = () => {
                     <div>
                         <h4 className="text-white text-lg font-serif mb-8">Navigation</h4>
                         <ul className="flex flex-col gap-4 text-gray-400">
-                            <li><Link href="/shop/rings/solitaire" className="hover:text-[#D4AF37] transition-colors">Solitaire</Link></li>
-                            <li><Link href="/shop/necklaces/pendant" className="hover:text-[#D4AF37] transition-colors">Pendant</Link></li>
-                            <li><Link href="/shop/earrings/studs" className="hover:text-[#D4AF37] transition-colors">Studs</Link></li>
-                            <li><Link href="/shop/anklets/gold" className="hover:text-[#D4AF37] transition-colors">Gold Anklets</Link></li>
-                            <li><Link href="/shop/bangles/kada" className="hover:text-[#D4AF37] transition-colors">Kada</Link></li>
+                            <li><Link to="/shop?category=rings&type=solitaire" className="hover:text-[#D4AF37] transition-colors">Solitaire</Link></li>
+                            <li><Link to="/shop?category=necklaces&type=pendant" className="hover:text-[#D4AF37] transition-colors">Pendant</Link></li>
+                            <li><Link to="/shop?category=earrings&type=studs" className="hover:text-[#D4AF37] transition-colors">Studs</Link></li>
+                            <li><Link to="/shop?category=anklets&type=gold" className="hover:text-[#D4AF37] transition-colors">Gold Anklets</Link></li>
+                            <li><Link to="/shop?category=bangles&type=kada" className="hover:text-[#D4AF37] transition-colors">Kada</Link></li>
                         </ul>
                     </div>
 
@@ -74,8 +74,8 @@ const Footer = () => {
                 <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-sm">
                     <p>© 2026 Aurelia Jewels. All Rights Reserved.</p>
                     <div className="flex gap-8">
-                        <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-                        <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+                        <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+                        <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
                     </div>
                 </div>
             </div>
