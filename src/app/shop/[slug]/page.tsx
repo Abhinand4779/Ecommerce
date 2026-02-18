@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from 'react';
 import Footer from '@/components/layout/Footer';
 import ProductCardFlipkart from '@/components/ui/ProductCardFlipkart';
@@ -122,7 +121,7 @@ export default function ShopSlugPage({ params }: { params: { slug: string } }) {
               {/* Main Image */}
               <div className="flex-1 bg-gray-50 rounded-sm overflow-hidden sticky top-20 h-fit">
                 <img
-                    src={(product.images as string[])[selectedImage]}
+                  src={(product.images as string[])[selectedImage]}
                   alt={product.name}
                   className="w-full aspect-square object-cover"
                 />
@@ -223,7 +222,7 @@ export default function ShopSlugPage({ params }: { params: { slug: string } }) {
           <div className="mt-8 bg-white border border-gray-200 rounded-sm p-6">
             <h2 className="text-xl font-semibold mb-4">Specifications</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Object.entries(product.specifications as Record<string,string>).map(([key, value]) => (
+              {Object.entries(product.specifications as Record<string, string>).map(([key, value]) => (
                 <div key={key} className="flex py-3 border-b border-gray-200"><span className="w-1/3 text-sm text-gray-600">{key}</span><span className="w-2/3 text-sm text-gray-900 font-medium">{value}</span></div>
               ))}
             </div>

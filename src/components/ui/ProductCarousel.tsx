@@ -1,7 +1,5 @@
-"use client";
-
 import React, { useRef } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
@@ -53,7 +51,7 @@ const ProductCarousel = ({ title, products }: ProductCarouselProps) => {
             <div className="container mx-auto px-4 sm:px-6">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-lg sm:text-xl font-bold text-gray-800">{title}</h2>
-                    <Link href="/shop" className="text-blue-600 text-sm font-medium hover:underline">
+                    <Link to="/shop" className="text-blue-600 text-sm font-medium hover:underline">
                         View All
                     </Link>
                 </div>
@@ -76,7 +74,7 @@ const ProductCarousel = ({ title, products }: ProductCarouselProps) => {
                         {products.map((product) => (
                             <div key={product.id} className="flex-shrink-0 w-44 sm:w-52 bg-white border border-gray-200 rounded-sm overflow-hidden hover:shadow-lg transition-all group/card relative">
                                 <Link
-                                    href={`/shop/${product.id}`}
+                                    to={`/shop/${product.id}`}
                                     className="block"
                                 >
 

@@ -1,5 +1,3 @@
-"use client";
-
 import React from 'react';
 import ProductCardFlipkart from './ProductCardFlipkart';
 import { products as allProducts } from '@/data/products';
