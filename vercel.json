@@ -1,40 +1,7 @@
 {
-    "version": 2,
     "cleanUrls": true,
     "trailingSlash": false,
     "rewrites": [
-        {
-            "source": "/admin",
-            "destination": "/index.html"
-        },
-        {
-            "source": "/admin/(.*)",
-            "destination": "/index.html"
-        },
-        {
-            "source": "/shop/(.*)",
-            "destination": "/index.html"
-        },
-        {
-            "source": "/cart",
-            "destination": "/index.html"
-        },
-        {
-            "source": "/checkout",
-            "destination": "/index.html"
-        },
-        {
-            "source": "/profile",
-            "destination": "/index.html"
-        },
-        {
-            "source": "/login",
-            "destination": "/index.html"
-        },
-        {
-            "source": "/register",
-            "destination": "/index.html"
-        },
         {
             "source": "/(.*)",
             "destination": "/index.html"

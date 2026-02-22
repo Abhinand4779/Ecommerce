@@ -7,27 +7,27 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
 // Pages
-import Home from '@/app/page';
-import ShopPage from '@/app/shop/page';
-import ProductDetail from '@/app/shop/ProductDetail';
-import CartPage from '@/app/cart/page';
-import CheckoutPage from '@/app/checkout/page';
-import CheckoutSuccessPage from '@/app/checkout/success/CheckoutSuccessClient';
-import LoginPage from '@/app/login/page';
-import RegisterPage from '@/app/register/page';
-import ProfilePage from '@/app/profile/page';
-import AboutPage from '@/app/about/page';
-import ContactPage from '@/app/contact/page';
+import Home from '@/pages/page';
+import ShopPage from '@/pages/shop/page';
+import ProductDetail from '@/pages/shop/ProductDetail';
+import CartPage from '@/pages/cart/page';
+import CheckoutPage from '@/pages/checkout/page';
+import CheckoutSuccessPage from '@/pages/checkout/success/CheckoutSuccessClient';
+import LoginPage from '@/pages/login/page';
+import RegisterPage from '@/pages/register/page';
+import ProfilePage from '@/pages/profile/page';
+import AboutPage from '@/pages/about/page';
+import ContactPage from '@/pages/contact/page';
 
 // Admin
-import AdminLayout from '@/app/admin/layout';
-import AdminDashboard from '@/app/admin/page';
-import AdminProducts from '@/app/admin/AdminProducts';
-import AdminOrders from '@/app/admin/AdminOrders';
-import AdminContent from '@/app/admin/AdminContent';
-import AdminCategories from '@/app/admin/AdminCategories';
-import AdminCustomers from '@/app/admin/AdminCustomers';
-import AdminSettings from '@/app/admin/AdminSettings';
+import AdminLayout from '@/pages/admin/layout';
+import AdminDashboard from '@/pages/admin/page';
+import AdminProducts from '@/pages/admin/AdminProducts';
+import AdminOrders from '@/pages/admin/AdminOrders';
+import AdminContent from '@/pages/admin/AdminContent';
+import AdminCategories from '@/pages/admin/AdminCategories';
+import AdminCustomers from '@/pages/admin/AdminCustomers';
+import AdminSettings from '@/pages/admin/AdminSettings';
 
 // Layout Shell for public pages — each page renders its own <Footer />
 const PublicLayout = () => (
