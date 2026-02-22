@@ -3,22 +3,14 @@ import { Outlet } from 'react-router-dom';
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminLogin from '@/components/admin/AdminLogin';
 
+import { useAuth } from '@/context/AuthContext';
+
 export default function AdminLayout() {
-    const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const { user, loading } = useAuth();
 
-    useEffect(() => {
-        // read admin session from localStorage on client
-        setIsAdmin(!!localStorage.getItem('isAdmin'));
+    if (loading) return <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-[#D4AF37]">Loading Admin...</div>;
 
-        // listen to storage changes from other tabs
-        const onStorage = (e: StorageEvent) => {
-            if (e.key === 'isAdmin') setIsAdmin(!!e.newValue);
-        };
-        window.addEventListener('storage', onStorage);
-        return () => window.removeEventListener('storage', onStorage);
-    }, []);
-
-    if (!isAdmin) {
+    if (!user?.is_admin) {
         return <AdminLogin />;
     }
 

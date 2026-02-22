@@ -10,9 +10,11 @@ import {
 import { motion } from 'framer-motion';
 import { api } from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminDashboard() {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -67,7 +69,10 @@ export default function AdminDashboard() {
                     <h1 className="text-3xl font-serif mb-2">Dashboard</h1>
                     <p className="text-gray-400">Manage your luxury empire with ease.</p>
                 </div>
-                <button className="gold-button flex items-center gap-2 text-sm px-6 py-2">
+                <button
+                    onClick={() => navigate('/admin/products')}
+                    className="gold-button flex items-center gap-2 text-sm px-6 py-2"
+                >
                     <Plus size={18} /> New Product
                 </button>
             </div>
@@ -103,7 +108,12 @@ export default function AdminDashboard() {
                 <div className="lg:col-span-3 bg-[#141414] border border-white/5 p-8 rounded-xl">
                     <div className="flex justify-between items-center mb-8">
                         <h3 className="text-xl font-serif text-white">Recent Orders</h3>
-                        <button className="text-[#D4AF37] text-sm hover:underline">View All</button>
+                        <button
+                            onClick={() => navigate('/admin/orders')}
+                            className="text-[#D4AF37] text-sm hover:underline"
+                        >
+                            View All
+                        </button>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">

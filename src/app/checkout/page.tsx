@@ -30,16 +30,59 @@ export default function CheckoutPage() {
 
     setProcessing(true);
 
-    // Simulate order creation
-    const orderId = 'ORD-' + Math.random().toString(36).slice(2, 9).toUpperCase();
+    try {
+      const token = localStorage.getItem('auth_token');
+      if (!token) throw new Error('Authentication required');
 
-    // In a real app, send order + payment info to backend here.
-    // For now, clear cart and redirect to success page with orderId
-    clearCart();
+      // 1. Sync local cart to server (Clear and Re-add)
+      // This is a robust way to ensure the server knows about the current cart
+      await fetch(`${import.meta.env.VITE_API_BASE_URL}/cart/`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
 
-    setTimeout(() => {
-      navigate(`/checkout/success?orderId=${orderId}`);
-    }, 600);
+      for (const item of items) {
+        await fetch(`${import.meta.env.VITE_API_BASE_URL}/cart/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            product_id: item.id,
+            quantity: item.quantity
+          })
+        });
+      }
+
+      // 2. Place the order
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/orders/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          shipping_address: "Standard Delivery Address" // In real app, get from form
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to place order');
+      }
+
+      const orderData = await response.json();
+
+      // 3. Cleanup and redirect
+      clearCart();
+      navigate(`/checkout/success?orderId=${orderData.id}`);
+    } catch (error: any) {
+      console.error('Checkout error:', error);
+      alert(`Checkout failed: ${error.message}`);
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (

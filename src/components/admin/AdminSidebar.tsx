@@ -8,7 +8,8 @@ import {
     Settings,
     LogOut,
     ShoppingBag,
-    Gem
+    Gem,
+    Edit2
 } from 'lucide-react';
 
 const AdminSidebar = () => {
@@ -23,6 +24,7 @@ const AdminSidebar = () => {
         { name: 'Categories', icon: <Gem size={20} />, href: '/admin/categories' },
         { name: 'Orders', icon: <ShoppingBag size={20} />, href: '/admin/orders' },
         { name: 'Customers', icon: <Users size={20} />, href: '/admin/customers' },
+        { name: 'Content', icon: <Edit2 size={20} />, href: '/admin/content' },
         { name: 'Settings', icon: <Settings size={20} />, href: '/admin/settings' },
     ];
 
@@ -56,9 +58,8 @@ const AdminSidebar = () => {
             <div className="p-8 border-t border-white/5">
                 <button
                     onClick={() => {
-                        if (typeof window !== 'undefined') localStorage.removeItem('isAdmin');
-                        try { signOut(); } catch (e) { /* ignore */ }
-                        navigate('/admin');
+                        signOut();
+                        navigate('/');
                     }}
                     className="flex items-center gap-4 text-gray-400 hover:text-red-400 transition-colors w-full px-4 py-3"
                 >

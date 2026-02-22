@@ -90,12 +90,31 @@ export const api = {
         }
     },
     orders: {
+        list: async (token: string) => {
+            const response = await fetch(`${API_BASE_URL}/orders/`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) throw new Error('Failed to fetch user orders');
+            return response.json() as Promise<any[]>;
+        },
         listAdmin: async (token: string) => {
             const response = await fetch(`${API_BASE_URL}/orders/admin/all`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error('Failed to fetch orders');
             return response.json() as Promise<any[]>;
+        },
+        create: async (token: string, orderData: any) => {
+            const response = await fetch(`${API_BASE_URL}/orders/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(orderData)
+            });
+            if (!response.ok) throw new Error('Failed to place order');
+            return response.json();
         }
     },
     health: async () => {

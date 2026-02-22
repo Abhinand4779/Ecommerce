@@ -22,6 +22,12 @@ import ContactPage from '@/app/contact/page';
 // Admin
 import AdminLayout from '@/app/admin/layout';
 import AdminDashboard from '@/app/admin/page';
+import AdminProducts from '@/app/admin/AdminProducts';
+import AdminOrders from '@/app/admin/AdminOrders';
+import AdminContent from '@/app/admin/AdminContent';
+import AdminCategories from '@/app/admin/AdminCategories';
+import AdminCustomers from '@/app/admin/AdminCustomers';
+import AdminSettings from '@/app/admin/AdminSettings';
 
 // Layout Shell for public pages — each page renders its own <Footer />
 const PublicLayout = () => (
@@ -59,7 +65,12 @@ function App() {
                         {/* Admin Routes */}
                         <Route path="/admin" element={<AdminLayout />}>
                             <Route index element={<AdminDashboard />} />
-                            <Route path="*" element={<div className="p-8">Page under construction</div>} />
+                            <Route path="products" element={<AdminProducts />} />
+                            <Route path="orders" element={<AdminOrders />} />
+                            <Route path="content" element={<AdminContent />} />
+                            <Route path="categories" element={<AdminCategories />} />
+                            <Route path="customers" element={<AdminCustomers />} />
+                            <Route path="settings" element={<AdminSettings />} />
                         </Route>
 
                         {/* Fallback */}
