@@ -12,7 +12,7 @@ import ShopPage from '@/app/shop/page';
 import ProductDetail from '@/app/shop/ProductDetail';
 import CartPage from '@/app/cart/page';
 import CheckoutPage from '@/app/checkout/page';
-import CheckoutSuccessPage from '@/app/checkout/success/page';
+import CheckoutSuccessPage from '@/app/checkout/success/CheckoutSuccessClient';
 import LoginPage from '@/app/login/page';
 import RegisterPage from '@/app/register/page';
 import ProfilePage from '@/app/profile/page';
@@ -23,21 +23,13 @@ import ContactPage from '@/app/contact/page';
 import AdminLayout from '@/app/admin/layout';
 import AdminDashboard from '@/app/admin/page';
 
-// Layout Shell for public pages
+// Layout Shell for public pages — each page renders its own <Footer />
 const PublicLayout = () => (
     <div className="min-h-screen bg-gray-50 flex flex-col">
         <Navbar />
         <main className="flex-grow">
             <Outlet />
         </main>
-        {/* Footer is inside some pages, but optimally should be here if all pages have it. 
-            However, some pages like Login/Register might not need it or have it inside.
-            The current Home page handles its own Footer.
-            Let's check if we should include Footer here globally. 
-            Most pages seemed to include <Footer /> manually. 
-            For now, I'll rely on pages rendering Footer themselves to match previous structure, 
-            or I can refactor later.
-        */}
     </div>
 );
 

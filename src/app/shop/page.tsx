@@ -1,19 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Footer from "@/components/layout/Footer";
 import ProductCardFlipkart from "@/components/ui/ProductCardFlipkart";
 import { ChevronRight, X, SlidersHorizontal } from 'lucide-react';
-
-import { products as allProducts } from '@/data/products';
+import { api, Product } from '@/services/api';
 
 export default function ShopPage() {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
     const [activeCategory, setActiveCategory] = useState('All');
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [priceRange, setPriceRange] = useState('all');
     const [sortBy, setSortBy] = useState('popularity');
 
-    const filteredProducts = activeCategory === 'All'
-        ? allProducts
-        : allProducts.filter(p => p.category.toLowerCase() === activeCategory.toLowerCase());
+    useEffect(() => {
+        const fetchProducts = async () => {
+            setLoading(true);
+            try {
+                const category = activeCategory === 'All' ? undefined : activeCategory;
+                const data = await api.products.list({ category });
+                setProducts(data);
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, [activeCategory]);
+
+    // Sorting logic
+    const sortedProducts = [...products].sort((a, b) => {
+        if (sortBy === 'price-low') return a.price - b.price;
+        if (sortBy === 'price-high') return b.price - a.price;
+        if (sortBy === 'rating') return b.rating - a.rating;
+        return 0; // popularity/default
+    });
+
+    // Filtering logic (price range)
+    const filteredProducts = sortedProducts.filter(p => {
+        if (priceRange === 'under20k') return p.price < 20000;
+        if (priceRange === '20k-40k') return p.price >= 20000 && p.price <= 40000;
+        if (priceRange === 'above40k') return p.price > 40000;
+        return true;
+    });
+
+    const categories = ['All', 'Rings', 'Necklaces', 'Earrings', 'Bracelets'];
 
     return (
         <main className="min-h-screen bg-gray-50">
@@ -22,7 +55,7 @@ export default function ShopPage() {
             <div className="bg-white border-b border-gray-200">
                 <div className="container mx-auto px-4 sm:px-6 py-3">
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
-                        <span className="hover:text-blue-600 cursor-pointer">Home</span>
+                        <Link to="/" className="hover:text-blue-600 cursor-pointer">Home</Link>
                         <ChevronRight size={14} />
                         <span className="text-gray-900 font-medium">Jewellery</span>
                     </div>
@@ -43,7 +76,7 @@ export default function ShopPage() {
                                 <div className="p-4">
                                     <h4 className="font-semibold text-sm mb-3 uppercase text-gray-700">Category</h4>
                                     <div className="space-y-2">
-                                        {['All', 'Rings', 'Necklaces', 'Earrings', 'Bracelets'].map((cat) => (
+                                        {categories.map((cat) => (
                                             <label key={cat} className="flex items-center gap-2 cursor-pointer">
                                                 <input
                                                     type="radio"
@@ -84,36 +117,6 @@ export default function ShopPage() {
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Discount Filter */}
-                            <div className="border-b border-gray-200">
-                                <div className="p-4">
-                                    <h4 className="font-semibold text-sm mb-3 uppercase text-gray-700">Discount</h4>
-                                    <div className="space-y-2">
-                                        {['30% or more', '20% or more', '10% or more'].map((discount) => (
-                                            <label key={discount} className="flex items-center gap-2 cursor-pointer">
-                                                <input type="checkbox" className="w-4 h-4 text-blue-600" />
-                                                <span className="text-sm text-gray-700">{discount}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Rating Filter */}
-                            <div>
-                                <div className="p-4">
-                                    <h4 className="font-semibold text-sm mb-3 uppercase text-gray-700">Customer Ratings</h4>
-                                    <div className="space-y-2">
-                                        {['4★ & above', '3★ & above'].map((rating) => (
-                                            <label key={rating} className="flex items-center gap-2 cursor-pointer">
-                                                <input type="checkbox" className="w-4 h-4 text-blue-600" />
-                                                <span className="text-sm text-gray-700">{rating}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </aside>
 
@@ -133,7 +136,9 @@ export default function ShopPage() {
                         {/* Sort Bar */}
                         <div className="bg-white border border-gray-200 rounded-sm p-3 sm:p-4 mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                             <p className="text-sm text-gray-700">
-                                Showing <span className="font-semibold">{filteredProducts.length}</span> results
+                                {loading ? 'Loading...' : (
+                                    <>Showing <span className="font-semibold">{filteredProducts.length}</span> results</>
+                                )}
                             </p>
                             <div className="flex items-center gap-2 w-full sm:w-auto">
                                 <span className="text-sm text-gray-700">Sort by:</span>
@@ -146,19 +151,23 @@ export default function ShopPage() {
                                     <option value="price-low">Price: Low to High</option>
                                     <option value="price-high">Price: High to Low</option>
                                     <option value="rating">Customer Rating</option>
-                                    <option value="newest">Newest First</option>
                                 </select>
                             </div>
                         </div>
 
                         {/* Product Grid */}
                         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-                            {filteredProducts.map((product) => (
-                                <ProductCardFlipkart key={product.id} product={product} />
+                            {filteredProducts.map((p) => (
+                                <ProductCardFlipkart key={p.id} product={{
+                                    ...p,
+                                    originalPrice: p.original_price ?? p.price,
+                                    image: p.image || (p.images && p.images[0]) || '/images/placeholder.jpg',
+                                    reviews: p.review_count
+                                } as any} />
                             ))}
                         </div>
 
-                        {filteredProducts.length === 0 && (
+                        {!loading && filteredProducts.length === 0 && (
                             <div className="bg-white border border-gray-200 rounded-sm p-12 text-center">
                                 <p className="text-gray-500 text-lg">No products found matching your filters.</p>
                             </div>
@@ -177,13 +186,28 @@ export default function ShopPage() {
                                 <X size={24} />
                             </button>
                         </div>
-                        {/* Same filter content as desktop sidebar */}
                         <div className="p-4">
+                            <h4 className="font-semibold text-sm mb-3 uppercase text-gray-700">Category</h4>
+                            <div className="space-y-2 mb-6">
+                                {categories.map((cat) => (
+                                    <label key={cat} className="flex items-center gap-2 cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="category-mobile"
+                                            checked={activeCategory === cat}
+                                            onChange={() => setActiveCategory(cat)}
+                                            className="w-4 h-4 text-blue-600"
+                                        />
+                                        <span className="text-sm text-gray-700">{cat}</span>
+                                    </label>
+                                ))}
+                            </div>
+
                             <button
                                 onClick={() => setShowMobileFilters(false)}
                                 className="w-full bg-blue-600 text-white py-3 rounded-sm font-semibold"
                             >
-                                Apply Filters
+                                Close
                             </button>
                         </div>
                     </div>
@@ -194,3 +218,4 @@ export default function ShopPage() {
         </main>
     );
 }
+

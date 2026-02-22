@@ -7,8 +7,8 @@ interface Product {
     id: number;
     name: string;
     price: number;
-    originalPrice: number;
-    discount: number;
+    originalPrice?: number;
+    discount?: number;
     rating: number;
     images?: string[];
     image?: string;
@@ -84,9 +84,11 @@ const ProductCarousel = ({ title, products }: ProductCarouselProps) => {
                                             alt={product.name}
                                             className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300"
                                         />
-                                        <div className="absolute top-2 left-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-sm">
-                                            {product.discount}% OFF
-                                        </div>
+                                        {product.discount !== undefined && product.discount > 0 && (
+                                            <div className="absolute top-2 left-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-sm">
+                                                {product.discount}% OFF
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="p-3">
@@ -107,9 +109,11 @@ const ProductCarousel = ({ title, products }: ProductCarouselProps) => {
                                             <span className="text-base sm:text-lg font-bold text-gray-900">
                                                 ₹{product.price.toLocaleString()}
                                             </span>
-                                            <span className="text-xs sm:text-sm text-gray-500 line-through">
-                                                ₹{product.originalPrice.toLocaleString()}
-                                            </span>
+                                            {product.originalPrice !== undefined && product.originalPrice > product.price && (
+                                                <span className="text-xs sm:text-sm text-gray-500 line-through">
+                                                    ₹{product.originalPrice.toLocaleString()}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </Link>

@@ -1,83 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Footer from '@/components/layout/Footer';
 import ProductCardFlipkart from '@/components/ui/ProductCardFlipkart';
 import { Star, ChevronRight, ShoppingCart, Zap, TruckIcon, ShieldCheck, RotateCcw, Heart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { products as allProducts } from '@/data/products';
-
-function isProductId(slug: string) {
-    return allProducts.some(p => String(p.id) === slug || p.id === Number(slug));
-}
+import { api, Product } from '@/services/api';
 
 export default function ProductDetail() {
     const { slug } = useParams<{ slug: string }>();
+    const [product, setProduct] = useState<any>(null);
+    const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedImage, setSelectedImage] = useState(0);
+    const [pincode, setPincode] = useState('');
+    const { addToCart, toggleFavorite, isFavorite } = useCart();
+    const [added, setAdded] = useState(false);
 
-    if (!slug) return null;
+    const isNumeric = (str: string) => /^\d+$/.test(str);
 
-    // Product detail page
-    if (isProductId(slug)) {
-        // Reuse the existing product detail logic (copied from [id]/page.tsx)
-        const id = slug;
-
-        const [selectedImage, setSelectedImage] = useState(0);
-        const [pincode, setPincode] = useState('');
-
-        const found = allProducts.find(p => String(p.id) === id || p.id === Number(id));
-
-        const product = found ? {
-            ...found,
-            name: found.name,
-            price: found.price,
-            originalPrice: (found as any).originalPrice ?? found.price,
-            discount: (found as any).discount ?? 0,
-            rating: (found as any).rating ?? 4.5,
-            reviews: (found as any).reviews ?? 0,
-            category: found.category ?? 'Jewellery',
-            images: (found as any).images ?? [found.image],
-            description: (found as any).description ?? 'Beautiful handcrafted piece.',
-            highlights: (found as any).highlights ?? [],
-            specifications: (found as any).specifications ?? {},
-        } : {
-            id,
-            name: "Royal Emerald & Diamond Necklace Set with Matching Earrings",
-            price: 45000,
-            originalPrice: 75000,
-            discount: 40,
-            rating: 4.5,
-            reviews: 1240,
-            category: "Necklaces",
-            images: [
-                "/images/necklaces.jpg",
-                "/images/necklaces.jpg",
-                "/images/necklaces.jpg",
-                "/images/necklaces.jpg",
-            ],
-            description: "Exquisite handcrafted necklace set featuring natural emeralds and diamonds set in 18k gold. Perfect for weddings and special occasions.",
-            highlights: [
-                "18k Solid Yellow Gold (Hallmarked)",
-                "Natural Emerald - 5.2 Carat",
-                "Diamond Total Weight - 1.5 Carat",
-                "Clarity: VS1, Color: G",
-                "Includes matching earrings",
-                "Comes with authenticity certificate"
-            ],
-            specifications: {
-                "Metal": "18K Yellow Gold",
-                "Gemstone": "Emerald & Diamond",
-                "Weight": "45.2 grams",
-                "Length": "18 inches (adjustable)",
-                "Occasion": "Wedding, Party",
-                "Warranty": "5 Years Manufacturing Warranty"
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!slug) return;
+            setLoading(true);
+            try {
+                if (isNumeric(slug)) {
+                    // Fetch single product
+                    const data = await api.products.get(Number(slug));
+                    setProduct({
+                        ...data,
+                        originalPrice: data.original_price ?? data.price,
+                        images: data.images?.length ? data.images : [data.image || '/images/placeholder.jpg'],
+                        reviews: data.review_count || 0,
+                        specifications: (data as any).specifications || {
+                            "Metal": "18K Gold",
+                            "Category": data.category || "Jewellery",
+                            "In Stock": data.in_stock ? "Yes" : "No"
+                        }
+                    });
+                } else {
+                    // Fetch category products
+                    const data = await api.products.list({ category: slug });
+                    setCategoryProducts(data);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
-        const { addToCart, toggleFavorite, isFavorite } = useCart();
-        const [added, setAdded] = useState(false);
+        fetchData();
+    }, [slug]);
+
+    if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+
+    if (isNumeric(slug || '')) {
+        if (!product) return <div className="min-h-screen flex items-center justify-center">Product not found</div>;
 
         const handleAdd = () => {
             try {
-                addToCart({ id: Number(product.id), name: product.name, price: product.price, image: product.images?.[selectedImage] ?? product.images?.[0] ?? '' });
+                addToCart({
+                    id: Number(product.id),
+                    name: product.name,
+                    price: product.price,
+                    image: product.image || product.images?.[0] || ''
+                });
                 setAdded(true);
                 setTimeout(() => setAdded(false), 1800);
             } catch (e) {
@@ -93,9 +80,9 @@ export default function ProductDetail() {
                 <div className="bg-white border-b border-gray-200">
                     <div className="container mx-auto px-4 sm:px-6 py-3">
                         <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
-                            <span className="hover:text-blue-600 cursor-pointer">Home</span>
+                            <Link to="/" className="hover:text-blue-600 cursor-pointer">Home</Link>
                             <ChevronRight size={14} />
-                            <span className="hover:text-blue-600 cursor-pointer">Jewellery</span>
+                            <Link to="/shop" className="hover:text-blue-600 cursor-pointer">Jewellery</Link>
                             <ChevronRight size={14} />
                             <span className="hover:text-blue-600 cursor-pointer">{product.category}</span>
                             <ChevronRight size={14} />
@@ -110,7 +97,7 @@ export default function ProductDetail() {
                         <div className="flex flex-col-reverse sm:flex-row gap-4">
                             {/* Thumbnails */}
                             <div className="flex sm:flex-col gap-2 overflow-x-auto sm:overflow-visible">
-                                {(product.images as string[]).map((img: string, index: number) => (
+                                {product.images.map((img: string, index: number) => (
                                     <button
                                         key={index}
                                         onClick={() => setSelectedImage(index)}
@@ -124,7 +111,7 @@ export default function ProductDetail() {
                             {/* Main Image */}
                             <div className="flex-1 bg-gray-50 rounded-sm overflow-hidden sticky top-20 h-fit">
                                 <img
-                                    src={(product.images as string[])[selectedImage]}
+                                    src={product.images[selectedImage]}
                                     alt={product.name}
                                     className="w-full aspect-square object-cover"
                                 />
@@ -155,8 +142,12 @@ export default function ProductDetail() {
                             <div className="mb-6">
                                 <div className="flex items-baseline gap-3 mb-2">
                                     <span className="text-3xl font-medium text-gray-900">₹{product.price.toLocaleString()}</span>
-                                    <span className="text-lg text-gray-500 line-through">₹{product.originalPrice.toLocaleString()}</span>
-                                    <span className="text-lg text-green-600 font-semibold">{product.discount}% off</span>
+                                    {product.originalPrice > product.price && (
+                                        <>
+                                            <span className="text-lg text-gray-500 line-through">₹{product.originalPrice.toLocaleString()}</span>
+                                            <span className="text-lg text-green-600 font-semibold">{product.discount}% off</span>
+                                        </>
+                                    )}
                                 </div>
                                 <p className="text-sm text-green-600 font-medium">+ ₹500 Secured Packaging Fee</p>
                             </div>
@@ -174,36 +165,6 @@ export default function ProductDetail() {
                                             <span className="text-green-600 font-bold mt-0.5">•</span>
                                             <span className="text-gray-700">{offer}</span>
                                         </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Delivery Check */}
-                            <div className="mb-6 pb-6 border-b border-gray-200">
-                                <h3 className="font-semibold text-sm mb-3">Delivery</h3>
-                                <div className="flex gap-2">
-                                    <input type="text" placeholder="Enter Delivery Pincode" value={pincode} onChange={(e) => setPincode(e.target.value)} className="flex-1 px-3 py-2 border border-gray-300 rounded-sm text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
-                                    <button className="px-4 py-2 text-blue-600 font-semibold text-sm hover:bg-blue-50 rounded-sm">Check</button>
-                                </div>
-                                <p className="text-sm text-gray-600 mt-2">Usually delivered in 5-7 business days</p>
-                            </div>
-
-                            {/* Highlights */}
-                            <div className="mb-6 pb-6 border-b border-gray-200">
-                                <h3 className="font-semibold text-sm mb-3">Highlights</h3>
-                                <ul className="space-y-2">
-                                    {(product.highlights as string[]).map((highlight: string, i: number) => (
-                                        <li key={i} className="flex items-start gap-2 text-sm text-gray-700"><span className="text-gray-400 mt-1">•</span>{highlight}</li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            {/* Services */}
-                            <div className="mb-6 pb-6 border-b border-gray-200">
-                                <h3 className="font-semibold text-sm mb-3">Services</h3>
-                                <div className="grid grid-cols-2 gap-3">
-                                    {[{ icon: <TruckIcon size={20} />, text: 'Free Delivery' }, { icon: <ShieldCheck size={20} />, text: '5 Year Warranty' }, { icon: <RotateCcw size={20} />, text: '7 Days Return' }, { icon: <Star size={20} />, text: 'Certified Quality' }].map((service, i) => (
-                                        <div key={i} className="flex items-center gap-2 text-sm text-gray-700"><span className="text-gray-400">{service.icon}</span>{service.text}</div>
                                     ))}
                                 </div>
                             </div>
@@ -243,17 +204,15 @@ export default function ProductDetail() {
         );
     }
 
-    // Category page (single segment categories like /shop/rings)
-    const category = slug;
-    const title = category.charAt(0).toUpperCase() + category.slice(1);
-    const products = allProducts.filter(p => p.category === category);
+    // Category page
+    const title = slug ? slug.charAt(0).toUpperCase() + slug.slice(1) : 'Category';
 
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="bg-white border-b border-gray-200">
                 <div className="container mx-auto px-4 sm:px-6 py-3">
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
-                        <span className="hover:text-blue-600 cursor-pointer">Home</span>
+                        <Link to="/" className="hover:text-blue-600 cursor-pointer">Home</Link>
                         <ChevronRight size={14} />
                         <span className="text-gray-900 font-medium">{title}</span>
                     </div>
@@ -264,7 +223,18 @@ export default function ProductDetail() {
                 <h1 className="text-2xl font-bold mb-4">{title}</h1>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {products.length > 0 ? products.map(p => <ProductCardFlipkart key={p.id} product={p} />) : <div className="col-span-full bg-white p-6 rounded border border-gray-200 text-center">No products found for this category yet.</div>}
+                    {categoryProducts.length > 0 ? categoryProducts.map(p => (
+                        <ProductCardFlipkart key={p.id} product={{
+                            ...p,
+                            originalPrice: p.original_price ?? p.price,
+                            image: p.image || (p.images && p.images[0]) || '/images/placeholder.jpg',
+                            reviews: p.review_count
+                        } as any} />
+                    )) : (
+                        <div className="col-span-full bg-white p-6 rounded border border-gray-200 text-center">
+                            No products found for this category yet.
+                        </div>
+                    )}
                 </div>
             </div>
 

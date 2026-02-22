@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import HeroBanner from "@/components/ui/HeroBanner";
 import CategoryBanner from "@/components/ui/CategoryBanner";
 import DealsSection from "@/components/ui/DealsSection";
@@ -6,26 +6,39 @@ import ProductCarousel from "@/components/ui/ProductCarousel";
 import Footer from "@/components/layout/Footer";
 import { Link } from "react-router-dom";
 import { TruckIcon, ShieldCheck, RotateCcw, Headphones } from "lucide-react";
-
-const trendingProducts = [
-  { id: 1, name: 'Royal Emerald Necklace Set', price: 45000, originalPrice: 75000, discount: 40, rating: 4.5, image: '/images/necklaces.jpg' },
-  { id: 2, name: 'Solitaire Diamond Ring', price: 28000, originalPrice: 40000, discount: 30, rating: 4.7, image: '/images/rings.jpg' },
-  { id: 3, name: 'Pearl Drop Earrings', price: 12000, originalPrice: 18000, discount: 33, rating: 4.3, image: '/images/earrings.jpg' },
-  { id: 4, name: 'Gold Bangle Set', price: 32000, originalPrice: 45000, discount: 29, rating: 4.6, image: '/images/bracelets.jpg' },
-  { id: 5, name: 'Diamond Wedding Band', price: 19000, originalPrice: 28000, discount: 32, rating: 4.8, image: '/images/rings.jpg' },
-  { id: 6, name: 'Opal Pendant', price: 21000, originalPrice: 30000, discount: 30, rating: 4.4, image: '/images/necklaces.jpg' },
-];
-
-const bestSellers = [
-  { id: 7, name: 'Diamond Stud Earrings', price: 15000, originalPrice: 22000, discount: 32, rating: 4.6, image: '/images/earrings.jpg' },
-  { id: 8, name: 'Ruby Eternity Ring', price: 35000, originalPrice: 50000, discount: 30, rating: 4.7, image: '/images/rings.jpg' },
-  { id: 9, name: 'Rose Gold Bracelet', price: 24000, originalPrice: 35000, discount: 31, rating: 4.5, image: '/images/bracelets.jpg' },
-  { id: 2, name: 'Solitaire Diamond Ring', price: 28000, originalPrice: 40000, discount: 30, rating: 4.7, image: '/images/rings.jpg' },
-  { id: 1, name: 'Royal Emerald Necklace', price: 45000, originalPrice: 75000, discount: 40, rating: 4.5, image: '/images/necklaces.jpg' },
-  { id: 3, name: 'Pearl Drop Earrings', price: 12000, originalPrice: 18000, discount: 33, rating: 4.3, image: '/images/earrings.jpg' },
-];
+import { api, Product } from '@/services/api';
 
 export default function Home() {
+  const [trendingProducts, setTrendingProducts] = useState<Product[]>([]);
+  const [bestSellers, setBestSellers] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const [trending, best] = await Promise.all([
+          api.products.list({ limit: 8, featured: true }),
+          api.products.list({ limit: 8 })
+        ]);
+        setTrendingProducts(trending);
+        setBestSellers(best);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Map backend product to component's expected format (if needed)
+  const mapProduct = (p: Product) => ({
+    ...p,
+    originalPrice: p.original_price ?? p.price,
+    image: p.image || (p.images && p.images[0]) || '/images/placeholder.jpg'
+  });
+
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Hero Banner Carousel */}
@@ -38,7 +51,12 @@ export default function Home() {
       <DealsSection />
 
       {/* Trending Products Carousel */}
-      <ProductCarousel title="Trending Jewellery" products={trendingProducts} />
+      {!loading && trendingProducts.length > 0 && (
+        <ProductCarousel
+          title="Trending Jewellery"
+          products={trendingProducts.map(mapProduct)}
+        />
+      )}
 
       {/* Promotional Banner 1 */}
       <section className="bg-gradient-to-r from-purple-600 to-pink-600 py-8 sm:py-12 border-y border-gray-200">
@@ -70,7 +88,12 @@ export default function Home() {
       </section>
 
       {/* Best Sellers Carousel */}
-      <ProductCarousel title="Best Sellers" products={bestSellers} />
+      {!loading && bestSellers.length > 0 && (
+        <ProductCarousel
+          title="Best Sellers"
+          products={bestSellers.map(mapProduct)}
+        />
+      )}
 
       {/* Promotional Banner 2 */}
       <section className="bg-gradient-to-r from-yellow-400 to-orange-500 py-8 sm:py-12 border-y border-gray-200">

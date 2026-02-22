@@ -21,7 +21,8 @@ export default function ContactPage() {
             await new Promise((res) => setTimeout(res, 800));
             setStatus('sent');
             setForm({ name: '', email: '', phone: '', subject: '', message: '' });
-        } catch (err) {
+        } 
+        catch (err) {
             setStatus('error');
         }
     };
