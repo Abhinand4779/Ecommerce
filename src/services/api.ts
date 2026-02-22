@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://jewellery-backend-mgq2.onrender.com';
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://jewellery-backend-mgq2.onrender.com').replace(/\/$/, '');
 
 export interface Product {
     id: number;
