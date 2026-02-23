@@ -78,9 +78,9 @@ const Footer = () => {
                         <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
                         <Link
                             to="/admin"
-                            className="w-2 h-2 bg-white/5 hover:bg-white/20 transition-all rounded-sm"
+                            className="px-2 py-0.5 bg-white/10 hover:bg-[#D4AF37]/50 text-[10px] text-gray-500 hover:text-black transition-all rounded-sm font-bold border border-white/10"
                             title="Admin Portal"
-                        ></Link>
+                        >ADM</Link>
                     </div>
                 </div>
             </div>
