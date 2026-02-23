@@ -76,7 +76,11 @@ const Footer = () => {
                     <div className="flex gap-8 items-center">
                         <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
                         <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-                        <Link to="/admin" className="opacity-0 hover:opacity-10 transition-opacity text-[8px] cursor-default">.</Link>
+                        <Link
+                            to="/admin"
+                            className="w-2 h-2 bg-white/5 hover:bg-white/20 transition-all rounded-sm"
+                            title="Admin Portal"
+                        ></Link>
                     </div>
                 </div>
             </div>
