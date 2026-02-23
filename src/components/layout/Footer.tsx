@@ -73,9 +73,10 @@ const Footer = () => {
 
                 <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-sm">
                     <p>© 2026 Aurelia Jewels. All Rights Reserved.</p>
-                    <div className="flex gap-8">
+                    <div className="flex gap-8 items-center">
                         <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
                         <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+                        <Link to="/admin" className="opacity-0 hover:opacity-10 transition-opacity text-[8px] cursor-default">.</Link>
                     </div>
                 </div>
             </div>
