@@ -41,6 +41,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gray-50">
+      {/* Deployment ID: FIX_404_V3 */}
+      <div id="deployment-check" style={{ display: 'none' }}>FIX_404_V3</div>
       {/* Hero Banner Carousel */}
       <HeroBanner />
 
