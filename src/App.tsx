@@ -1,7 +1,7 @@
 
 // Last updated: 2026-02-22 23:05
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import AuthWrapper from '@/components/AuthWrapper';
 import { CartProvider } from '@/context/CartContext';
 import Navbar from '@/components/layout/Navbar';
