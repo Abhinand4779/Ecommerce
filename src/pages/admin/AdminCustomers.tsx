@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Users,
     Search,
@@ -12,20 +12,56 @@ import {
     Phone
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { api, User, API_BASE_URL } from '@/services/api';
 
 export default function AdminCustomers() {
-    const [customers, setCustomers] = useState([
-        { id: 1, name: 'Aditi Sharma', email: 'aditi@example.com', phone: '+91 98765 43210', joined: 'Oct 12, 2023', orders: 4, totalSpent: 125000 },
-        { id: 2, name: 'Rahul Verma', email: 'rahul.v@gmail.com', phone: '+91 88822 11133', joined: 'Nov 05, 2023', orders: 2, totalSpent: 45000 },
-        { id: 3, name: 'Priya Patel', email: 'priya.jewelry@live.in', phone: '+91 70011 22334', joined: 'Jan 20, 2024', orders: 1, totalSpent: 89000 },
-    ]);
-
-    const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
+    const [customers, setCustomers] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
 
-    const handleDelete = (id: number) => {
-        if (window.confirm("Are you sure you want to remove this customer record? This cannot be undone.")) {
+    useEffect(() => {
+        fetchCustomers();
+    }, []);
+
+    const fetchCustomers = async () => {
+        try {
+            const token = localStorage.getItem("auth_token");
+            if (!token) return;
+            const data = await api.auth.listUsers(token);
+
+            // For now, these real users don't have order counts/total spent calculated on backend
+            // but we can map them to the UI structure
+            const formatted = data.map(u => ({
+                id: u.id,
+                name: u.full_name || 'New Customer',
+                email: u.email,
+                phone: u.phone || 'N/A',
+                joined: new Date().toLocaleDateString(), // simplified
+                orders: 0,
+                totalSpent: 0
+            }));
+
+            setCustomers(formatted);
+        } catch (error) {
+            console.error("Error fetching customers:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        if (!window.confirm("Are you sure you want to remove this user?")) return;
+
+        try {
+            const token = localStorage.getItem("auth_token");
+            await fetch(`${API_BASE_URL}/auth/users/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             setCustomers(customers.filter(c => c.id !== id));
+        } catch (error) {
+            console.error("Error deleting customer:", error);
         }
     };
 

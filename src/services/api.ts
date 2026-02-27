@@ -73,6 +73,13 @@ export const api = {
             });
             if (!response.ok) throw new Error('Failed to fetch profile');
             return response.json() as Promise<User>;
+        },
+        listUsers: async (token: string) => {
+            const response = await fetch(`${API_BASE_URL}/auth/users/all`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) throw new Error('Failed to fetch users');
+            return response.json() as Promise<User[]>;
         }
     },
     products: {
