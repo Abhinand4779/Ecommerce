@@ -118,12 +118,12 @@ export default function AdminOrders() {
                                     </td>
                                     <td className="px-8 py-6">
                                         <div className="flex flex-col">
-                                            <span className="text-sm text-white">{o.shipping_address?.full_name || 'Guest'}</span>
+                                            <span className="text-sm text-white">{o.user_name || 'Guest'}</span>
                                             <span className="text-[10px] text-gray-500 uppercase tracking-tighter">{o.user_email}</span>
                                         </div>
                                     </td>
                                     <td className="px-8 py-6">
-                                        <span className="text-sm font-bold text-white">₹{o.total_amount.toLocaleString()}</span>
+                                        <span className="text-sm font-bold text-white">₹{o.total?.toLocaleString()}</span>
                                     </td>
                                     <td className="px-8 py-6">
                                         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${o.status === 'Delivered' ? 'bg-green-500/10 text-green-500' :
@@ -201,7 +201,7 @@ export default function AdminOrders() {
                                             ))}
                                             <div className="pt-4 border-t border-white/5 flex justify-between items-center">
                                                 <span className="text-sm text-gray-400">Grand Total</span>
-                                                <span className="text-xl font-serif text-[#D4AF37]">₹{selectedOrder.total_amount.toLocaleString()}</span>
+                                                <span className="text-xl font-serif text-[#D4AF37]">₹{selectedOrder.total?.toLocaleString()}</span>
                                             </div>
                                         </div>
                                     </section>
@@ -209,11 +209,11 @@ export default function AdminOrders() {
                                     <section>
                                         <h4 className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-4">Status Update</h4>
                                         <div className="flex flex-wrap gap-2">
-                                            {['Pending', 'Processing', 'Shipped', 'Delivered'].map(status => (
+                                            {['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'].map(status => (
                                                 <button
                                                     key={status}
                                                     onClick={() => updateStatus(selectedOrder.id, status)}
-                                                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${selectedOrder.status === status
+                                                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all capitalize ${selectedOrder.status === status
                                                         ? 'bg-[#D4AF37] text-black shadow-[0_0_15px_rgba(212,175,55,0.3)]'
                                                         : 'bg-white/5 text-gray-400 hover:bg-white/10'
                                                         }`}
@@ -228,22 +228,20 @@ export default function AdminOrders() {
                                 {/* Shipping Info */}
                                 <div className="space-y-8">
                                     <section className="bg-white/[0.012] p-6 border border-white/5 rounded-xl">
-                                        <h4 className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-6 border-b border-white/5 pb-2">Shipping Information</h4>
+                                        <h4 className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-6 border-b border-white/5 pb-2">Customer Information</h4>
                                         <div className="space-y-4">
                                             <div>
                                                 <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Customer Name</p>
-                                                <p className="text-sm">{selectedOrder.shipping_address?.full_name}</p>
+                                                <p className="text-sm">{selectedOrder.user_name || 'Guest'}</p>
                                             </div>
                                             <div>
-                                                <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Phone Number</p>
-                                                <p className="text-sm font-mono">{selectedOrder.shipping_address?.phone || 'Not provided'}</p>
+                                                <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Email</p>
+                                                <p className="text-sm font-mono">{selectedOrder.user_email}</p>
                                             </div>
                                             <div>
-                                                <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Address</p>
+                                                <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Shipping Address</p>
                                                 <p className="text-sm leading-relaxed text-gray-300">
-                                                    {selectedOrder.shipping_address?.address},<br />
-                                                    {selectedOrder.shipping_address?.city} - {selectedOrder.shipping_address?.pincode},<br />
-                                                    {selectedOrder.shipping_address?.state}
+                                                    {selectedOrder.shipping_address || 'No address provided'}
                                                 </p>
                                             </div>
                                         </div>

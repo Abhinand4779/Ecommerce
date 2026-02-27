@@ -106,11 +106,11 @@ export default function ProfilePage() {
                         {orders.map((order) => (
                           <tr key={order.id} className="hover:bg-gray-50 transition-colors">
                             <td className="px-6 py-4 text-sm font-medium text-gray-900">#{order.id}</td>
-                            <td className="px-6 py-4 text-sm text-gray-700 font-bold">₹{order.total_amount.toLocaleString()}</td>
+                            <td className="px-6 py-4 text-sm text-gray-700 font-bold">₹{order.total?.toLocaleString()}</td>
                             <td className="px-6 py-4">
                               <span className={`px-2 py-1 rounded-full text-[10px] uppercase font-bold ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
-                                  order.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                                    'bg-blue-100 text-blue-700'
+                                order.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                                  'bg-blue-100 text-blue-700'
                                 }`}>
                                 {order.status}
                               </span>
