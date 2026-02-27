@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import Footer from '@/components/layout/Footer';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
+import { API_BASE_URL } from '@/services/api';
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -18,8 +19,7 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async () => {
     if (!user) {
-      // redirect to profile/sign-in first
-      navigate('/profile');
+      navigate('/login');
       return;
     }
 
@@ -35,14 +35,13 @@ export default function CheckoutPage() {
       if (!token) throw new Error('Authentication required');
 
       // 1. Sync local cart to server (Clear and Re-add)
-      // This is a robust way to ensure the server knows about the current cart
-      await fetch(`${import.meta.env.VITE_API_BASE_URL}/cart/`, {
+      await fetch(`${API_BASE_URL}/cart/`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
       for (const item of items) {
-        await fetch(`${import.meta.env.VITE_API_BASE_URL}/cart/`, {
+        await fetch(`${API_BASE_URL}/cart/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -56,27 +55,32 @@ export default function CheckoutPage() {
       }
 
       // 2. Place the order
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/orders/`, {
+      const response = await fetch(`${API_BASE_URL}/orders/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          shipping_address: "Standard Delivery Address" // In real app, get from form
+          shipping_address: "Standard Delivery Address"
         })
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to place order');
+      const text = await response.text();
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (e) {
+        console.error('Failed to parse response JSON:', text);
       }
 
-      const orderData = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.detail || `Server error: ${response.status}`);
+      }
 
       // 3. Cleanup and redirect
       clearCart();
-      navigate(`/checkout/success?orderId=${orderData.id}`);
+      navigate(`/checkout/success?orderId=${data.id || 'new'}`);
     } catch (error: any) {
       console.error('Checkout error:', error);
       alert(`Checkout failed: ${error.message}`);

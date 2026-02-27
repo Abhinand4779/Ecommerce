@@ -1,4 +1,13 @@
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://jewellery-backend-mgq2.onrender.com').replace(/\/$/, '');
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://jewellery-backend-mgq2.onrender.com').replace(/\/$/, '');
+
+const safeJson = async (response: Response) => {
+    const text = await response.text();
+    try {
+        return JSON.parse(text);
+    } catch (e) {
+        return null;
+    }
+};
 
 export interface Product {
     id: number;
