@@ -10,7 +10,7 @@ import {
     ChevronRight,
     X
 } from 'lucide-react';
-import { api } from '@/services/api';
+import { api, API_BASE_URL } from '@/services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminOrders() {
@@ -41,7 +41,7 @@ export default function AdminOrders() {
             const token = localStorage.getItem("auth_token");
             if (!token) return;
 
-            await fetch(`${import.meta.env.VITE_API_BASE_URL}/orders/${orderId}/status`, {
+            await fetch(`${API_BASE_URL}/orders/${orderId}/status`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -127,8 +127,8 @@ export default function AdminOrders() {
                                     </td>
                                     <td className="px-8 py-6">
                                         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${o.status === 'Delivered' ? 'bg-green-500/10 text-green-500' :
-                                                o.status === 'Pending' ? 'bg-amber-500/10 text-amber-500' :
-                                                    'bg-blue-500/10 text-blue-500'
+                                            o.status === 'Pending' ? 'bg-amber-500/10 text-amber-500' :
+                                                'bg-blue-500/10 text-blue-500'
                                             }`}>
                                             {getStatusIcon(o.status)}
                                             {o.status}
@@ -214,8 +214,8 @@ export default function AdminOrders() {
                                                     key={status}
                                                     onClick={() => updateStatus(selectedOrder.id, status)}
                                                     className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${selectedOrder.status === status
-                                                            ? 'bg-[#D4AF37] text-black shadow-[0_0_15px_rgba(212,175,55,0.3)]'
-                                                            : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                                                        ? 'bg-[#D4AF37] text-black shadow-[0_0_15px_rgba(212,175,55,0.3)]'
+                                                        : 'bg-white/5 text-gray-400 hover:bg-white/10'
                                                         }`}
                                                 >
                                                     {status}

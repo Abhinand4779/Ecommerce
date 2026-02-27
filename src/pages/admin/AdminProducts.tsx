@@ -10,7 +10,7 @@ import {
     Upload,
     Package
 } from 'lucide-react';
-import { api, Product } from '@/services/api';
+import { api, Product, API_BASE_URL } from '@/services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminProducts() {
@@ -53,7 +53,7 @@ export default function AdminProducts() {
             const token = localStorage.getItem("auth_token");
             if (!token) return;
             // Note: api.products.delete should be added if not exists
-            await fetch(`${import.meta.env.VITE_API_BASE_URL}/products/${id}`, {
+            await fetch(`${API_BASE_URL}/products/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -107,7 +107,7 @@ export default function AdminProducts() {
 
         try {
             if (editingProduct) {
-                await fetch(`${import.meta.env.VITE_API_BASE_URL}/products/${editingProduct.id}`, {
+                await fetch(`${API_BASE_URL}/products/${editingProduct.id}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ export default function AdminProducts() {
                     body: JSON.stringify(payload)
                 });
             } else {
-                await fetch(`${import.meta.env.VITE_API_BASE_URL}/products/`, {
+                await fetch(`${API_BASE_URL}/products/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
