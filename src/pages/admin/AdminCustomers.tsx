@@ -28,19 +28,28 @@ export default function AdminCustomers() {
         try {
             const token = localStorage.getItem("auth_token");
             if (!token) return;
-            const data = await api.auth.listUsers(token);
 
-            // For now, these real users don't have order counts/total spent calculated on backend
-            // but we can map them to the UI structure
-            const formatted = data.map(u => ({
-                id: u.id,
-                name: u.full_name || 'New Customer',
-                email: u.email,
-                phone: u.phone || 'N/A',
-                joined: new Date().toLocaleDateString(), // simplified
-                orders: 0,
-                totalSpent: 0
-            }));
+            // Fetch users AND orders so we can calculate stats
+            const [usersData, ordersData] = await Promise.all([
+                api.auth.listUsers(token),
+                api.orders.listAdmin(token)
+            ]);
+
+            // Map orders to users
+            const formatted = usersData.map(u => {
+                const userOrders = ordersData.filter(o => o.user_id === u.id);
+                const totalSpent = userOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+
+                return {
+                    id: u.id,
+                    name: u.full_name || 'New Customer',
+                    email: u.email,
+                    phone: u.phone || 'N/A',
+                    joined: new Date(u.created_at || Date.now()).toLocaleDateString(),
+                    orders: userOrders.length,
+                    totalSpent: totalSpent
+                };
+            });
 
             setCustomers(formatted);
         } catch (error) {
@@ -137,24 +146,24 @@ export default function AdminCustomers() {
                                         <span className="text-sm font-bold text-white tracking-tight">₹{c.totalSpent.toLocaleString()}</span>
                                     </td>
                                     <td className="px-8 py-6 text-right">
-                                        <div className="flex justify-end gap-3 translate-x-2 opacity-40 group-hover:opacity-100 transition-all">
+                                        <div className="flex justify-end gap-3 opacity-60 group-hover:opacity-100 transition-all">
                                             <button
-                                                onClick={() => setSelectedCustomer(c)}
-                                                className="p-2 hover:bg-[#D4AF37]/10 rounded-lg text-white hover:text-[#D4AF37] transition-all"
+                                                onClick={(e) => { e.stopPropagation(); setSelectedCustomer(c); }}
+                                                className="p-2.5 hover:bg-[#D4AF37]/20 rounded-lg text-white hover:text-[#D4AF37] transition-all cursor-pointer z-10"
                                                 title="View Details"
                                             >
                                                 <Eye size={18} />
                                             </button>
                                             <button
-                                                onClick={() => handleEmail(c.email)}
-                                                className="p-2 hover:bg-blue-500/10 rounded-lg text-white hover:text-blue-400 transition-all"
+                                                onClick={(e) => { e.stopPropagation(); handleEmail(c.email); }}
+                                                className="p-2.5 hover:bg-blue-500/20 rounded-lg text-white hover:text-blue-400 transition-all cursor-pointer z-10"
                                                 title="Send Email"
                                             >
                                                 <Mail size={18} />
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(c.id)}
-                                                className="p-2 hover:bg-red-500/10 rounded-lg text-white hover:text-red-500 transition-all"
+                                                onClick={(e) => { e.stopPropagation(); handleDelete(c.id); }}
+                                                className="p-2.5 hover:bg-red-500/20 rounded-lg text-white hover:text-red-500 transition-all cursor-pointer z-10"
                                                 title="Delete Customer"
                                             >
                                                 <Trash2 size={18} />

@@ -41,7 +41,7 @@ export default function AdminOrders() {
             const token = localStorage.getItem("auth_token");
             if (!token) return;
 
-            await fetch(`${API_BASE_URL}/orders/${orderId}/status`, {
+            await fetch(`${API_BASE_URL}/orders/admin/${orderId}/status`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

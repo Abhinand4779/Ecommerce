@@ -36,6 +36,7 @@ export interface User {
     phone?: string;
     is_admin: boolean;
     is_active: boolean;
+    created_at?: string;
 }
 
 export const api = {
